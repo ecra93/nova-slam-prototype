@@ -4,7 +4,7 @@ from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import NavSatFix
 from std_msgs.msg import String
 
-from planning_functions import a_star
+from a_star import a_star
 
 # node configuration
 NODE_NAME = "planner"
