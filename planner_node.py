@@ -35,50 +35,51 @@ def is_ready():
 
 def pose_to_gridcell(pose):
     """
-    Converts a pose (x,y) tuple, assumed to be in the "map" frame to a
-    cell coordinate (x,y) in the occupancy grid.
+    Converts a pose (x,y) tuple to a cell coordinate (x,y) in the occupancy
+    grid. Assumes both the pose and the grid to be in the "map" frame.
     """
+    # TODO
     return (0, 0)
 
 def latlon_to_gridcell(latlon):
     """
-    Converts a latlon (lat, lon) tuple to a cell coordinate (x,y) in the
-    occupancy grid.
+    Converts a latlon (lat,lon) tuple to a cell coordinate (x,y) in the
+    occupancy grid. Assumes the grid to be in the "map" frame.
     """
+    # TODO
     return (0, 0)
 
 def preprocess_occupancy_grid(raw_grid):
     """
-    Preprocesses the raw occupancy grid:
-        (1) Reshapes the 1D raw array into a 2D matrix;
-        (2) Switches any cell with an obstacle probability above some
-            threshold to cost of float("inf");
-        (3) TODO: k x k 2D max convolution with "same" padding (this is
-            so that the rover doesn't try to pass through cells, with a
-            smaller area than the rover itself, which might be adjacent to
-            obstacles).
+    Preprocesses the raw occupancy grid prior to passing it to the waypointing
+    algorithm:
+        (1) Reshape 1D array into a 2D matrix;
+        (2) Set cost of cells with high obstance probability to infinity; and
+        (3) Apply KxK max convolution to 2D matrix.
     """
+    # TODO
     return raw_grid
 
 def gridcell_to_pose(cell):
     """
-    Converts an (x,y) cell coordinate into a pose in the "map" frame.
+    Converts an (x,y) cell coordinate into a pose. Both are assumed to be i
+    the "map" frame.
     """
+    # TODO
     return (0, 0)
 
 def odom_callback(msg):
     """
-    Extracts the current pose of the rover, ideally in the "map" frame (but
-    need to check if this is possible). Used to locate the rover's location
-    in the occupancy grid.
+    Saves the most recent pose of the rover to internal state. Pose is assumed
+    to be in the "map" frame.
     """
+    # TODO: check if rover's pose is actually published in "map"
     state_current_pose = msg.pose
     state_current_twist = msg.twist
 
 def map_callback(msg):
     """
-    Extracts and preprocesses the most recent version of the occupancy
-    grid.
+    Saves the most recent occupancy grid to internal state.
     """
     state_grid_origin_pose = msg.info.origin
     state_occupancy_grid = msg.data
@@ -111,7 +112,8 @@ def planner():
             start = pose_to_gridcell(state_current_pose)
             end = latlon_to_gridcell(state_current_objective)
             grid = preprocess_occupancy_grid(state_occupancy_grid)
-            waypoints = [gridcell_to_pose(wp) for wp in a_star(grid, start, end]
+            waypoints = [gridcell_to_pose(wp) for wp in a_star(grid, start, end)]
+            # TODO: waypoint smoothing
             waypoint_publisher.publish(str(waypoints))
         else:
             rospy.logdebug("Planner not ready to publish.")
