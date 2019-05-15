@@ -1,10 +1,12 @@
 import rospy
 from nav_msgs.msg import Odometry
-from nav_msgs.msg import OccupancyGrid
+from nav_msgs.msg import OccupancyGrid, MapMetaData
+from geometry_msgs.msg import Pose, Point, Quaternion
 from sensor_msgs.msg import NavSatFix
 from std_msgs.msg import String
 
 from a_star import a_star
+
 
 # node configuration
 NODE_NAME = "planner"
@@ -23,6 +25,7 @@ state_current_objective = None
 state_grid_origin_pose = None
 state_occupancy_grid = None
 
+
 def is_ready():
     """
     Checks that the node has received sufficient data to begin planning -
@@ -38,8 +41,16 @@ def pose_to_gridcell(pose):
     Converts a pose (x,y) tuple to a cell coordinate (x,y) in the occupancy
     grid. Assumes both the pose and the grid to be in the "map" frame.
     """
-    # TODO
-    return (0, 0)
+    if pose == start_grid_origin_pose:
+        return (0, 0)
+    origin_point = start_grid_origin_pose.point
+
+    point = pose.point
+
+    x = point.x - origin_point.x
+    y = point.y - origin_point.y
+
+    return (x, y)
 
 def latlon_to_gridcell(latlon):
     """
@@ -65,8 +76,19 @@ def gridcell_to_pose(cell):
     Converts an (x,y) cell coordinate into a pose. Both are assumed to be i
     the "map" frame.
     """
-    # TODO
-    return (0, 0)
+    if cell == (0, 0):
+        return state_grid_origin_pose
+    
+    origin_point = start_grid_origin_pose.point
+    pose = Pose()
+
+    pose.position.x = orgin_point.x - cell[0]
+    pose.position.y = orgin_point.y - cell[1]
+    pose.position.z = orgin_point.z
+
+    pose.orientation = state_grid_origin_pose.orientation
+
+    return pose
 
 def odom_callback(msg):
     """
