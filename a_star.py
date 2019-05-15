@@ -13,8 +13,12 @@ def reconstruct_path_to_destination(prev, end):
     to the end destination using the mapping from nodes to their predecessors
     (prev).
     """
-    # TODO
-    return []
+    path = [end]
+    curr = end
+    while curr in prev.keys():
+        curr = prev[curr]
+        path.insert(curr, 0)
+    return path
 
 def edge_distance_between(node_from, node_to, grid):
     """
@@ -49,6 +53,19 @@ def neighbors_of(node, grid):
             neighbors.append( (r, c) )
 
     return neighbors
+
+def node_with_min_fscore(open_set, f_cost):
+    """
+    Find the cell in open set with the smallest f score.
+    """
+    # TODO: replace this nasty implementation with a heapq
+    max_score = -1
+    max_node = Node
+    for node in open_set:
+        if f_score[node] > max_score:
+            max_score = f_score[node]
+            max_node = node
+    return node
 
 def a_star(grid, start, end, heuristic_cost=euclidean_heuristic_cost):
     """
@@ -87,7 +104,8 @@ def a_star(grid, start, end, heuristic_cost=euclidean_heuristic_cost):
     f_cost[start] = heuristic_cost(start, end)
 
     while len(open_set) != 0:
-        curr = # node in open set with min fscore
+        # node in open set with min fscore
+        curr = node_with_min_fscore(open_set, f_cost)
         
         # if we've reached the destination
         if curr == end:
