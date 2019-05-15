@@ -26,6 +26,7 @@ def objective_node():
         if is_ready():
             rospy.loginfo("Publishing objective.")
             msg = NavSatFix()
+            msg.header.stamp = rospy.get_rostime()
             msg.latitude = state_objective_latitude
             msg.longitude = state_objective_longitude
             objective_publisher.publish(msg)
