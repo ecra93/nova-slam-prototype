@@ -41,9 +41,9 @@ def pose_to_gridcell(pose):
     Converts a pose (x,y) tuple to a cell coordinate (x,y) in the occupancy
     grid. Assumes both the pose and the grid to be in the "map" frame.
     """
-    if pose == start_grid_origin_pose:
+    if pose == state_grid_origin_pose:
         return (0, 0)
-    origin_point = start_grid_origin_pose.point
+    origin_point = state_grid_origin_pose.point
 
     point = pose.point
 
@@ -79,12 +79,12 @@ def gridcell_to_pose(cell):
     if cell == (0, 0):
         return state_grid_origin_pose
     
-    origin_point = start_grid_origin_pose.point
+    origin_point = state_grid_origin_pose.point
     pose = Pose()
 
-    pose.position.x = orgin_point.x - cell[0]
-    pose.position.y = orgin_point.y - cell[1]
-    pose.position.z = orgin_point.z
+    pose.position.x = origin_point.x - cell[0]
+    pose.position.y = origin_point.y - cell[1]
+    pose.position.z = origin_point.z
 
     pose.orientation = state_grid_origin_pose.orientation
 
